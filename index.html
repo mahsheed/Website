@@ -1,27 +1,90 @@
 <!doctype html>
 <html>
   <head>
+      <title>Pure Lashes</title>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style>
+    div.container {
+    width: 100%;
+    border: 1px solid gray;
+}
+
+header, footer {
+    padding: 1em;
+    color: white;
+    background-color: black;
+    clear: left;
+    text-align: center;
+}
+
+nav {
+    float: left;
+    max-width: 160px;
+    margin: 0;
+    padding: 1em;
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+}
+   
+nav ul a {
+    text-decoration: none;
+  
+  
+   /* Remove the jumbotron's default bottom margin */ 
+   .jumbotron {
+      margin-bottom: 0;
+    }
+   
+    /* Add a gray background color and some padding to the footer */
+    footer {
+      background-color: #f2f2f2;
+      padding: 25px;
+    }
+}</style>
     <title> </title>
     <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
   </head>
   <body>
-    <h1>Shopping Cart</h1>
+      <div class="jumbotron">
+          <div class="container text-center">
+            <h1>Essential Express E-Store</h1>      
+            <p>Non-toxic, paraben-free, fragrance-free, long-lasting</p>
+          </div>
+        </div>
+    <div class="container">
+      <header>
+      </header>
 
-    <div>
-      <ul>
-        <li><a class="add-to-cart" href="#" data-name="Apple" data-price="1.22">Apple $1.22</a></li>
-        <li><a class="add-to-cart" href="#" data-name="Banana" data-price="1.33">Banana $1.33</a></li>
-        <li><a class="add-to-cart" href="#" data-name="Shoe" data-price="22.33">Shoe $22.33</a></li>
-        <li><a class="add-to-cart" href="#" data-name="Frisbee" data-price="5.22">Frisbee $5.22</a></li>
+      <article>
+
+      <ul style="list-style-type:none">
+        <li><br><img src="images/black.png" class="img-responsive" style="width:60px" alt="Image">
+          Apple $1.22<br>30 in stock<br><a class="add-to-cart" href="#" data-name="Apple" data-price="1.22"><button id="add-basket">Add to Basket</button></a></li>
+        <li><br><img src="images/green.png" class="img-responsive" style="width:60px" alt="Image">
+          Banana $1.33<br>20 in stock<br><a class="add-to-cart" href="#" data-name="Banana" data-price="1.33"><button id="add-basket">Add to Basket</button></a></li>
+        <li><br><img src="images/purple.png" class="img-responsive" style="width:60px" alt="Image">
+          Shoe $22.33<br>20 in stock<br><a class="add-to-cart" href="#" data-name="Shoe" data-price="22.33"><button id="add-basket">Add to Basket</button></a></li>
+        <li><br><img src="images/brown.png" class="img-responsive" style="width:60px" alt="Image">
+          Frisbee $5.22<br>15 in stock<br><a class="add-to-cart" href="#" data-name="Frisbee" data-price="5.22"><button id="add-basket">Add to Basket</button></a></li>
       </ul>
-      <button id="clear-cart">Clear Cart</button>
     </div>
 
-    <div>
-      <ul id="show-cart">
+    <div><header><h2>Edit your basket!</h2></header>
+      <ul id="show-cart" style="list-style-type:none">
         <li>??????</li>
       </ul>
+      <div>You have <span id="count-cart">X</span> items in your basket</div>
       <div>Total Cart: $<span id="total-cart"></span></div>
+      <button id="clear-cart">Clear Basket</button>
+      <button id="proceed-checkout">Proceed to Checkout</button>
+
     </div>
 
 
@@ -54,16 +117,17 @@
             +" "+cartArray[i].count
             +" x "+cartArray[i].price
             +" = "+cartArray[i].total
-            +" <button class='plus-item' data-name='"
-            +cartArray[i].name+"'>+</button>"
-            +" <button class='subtract-item' data-name='"
-            +cartArray[i].name+"'>-</button>"
-            +" <button class='delete-item' data-name='"
-            +cartArray[i].name+"'>X</button>"
+            +" <br><button class='plus-item' data-name='"
+            +cartArray[i].name+"'>Add one item to basket</button>"
+            +" <br><button class='subtract-item' data-name='"
+            +cartArray[i].name+"'>Remove one item from basket</button>"
+            +" <br><button class='delete-item' data-name='"
+            +cartArray[i].name+"'>Remove all from basket</button><br><br>"
             +"</li>"; //+= means add to the end of what's alraedy there
         }
 
         $("#show-cart").html(output); //lets you write text into tag
+        $("#count-cart").html( shoppingCart.countCart() );
         $("#total-cart").html( shoppingCart.totalCart() );
       }
 
@@ -197,8 +261,12 @@ shoppingCart.clearCart = function() {
 // saveCart : Function
 // loadCart : Function
 
-
-    
     </script>
+    </article>
+    <footer class="container-fluid text-center">
+        <p>Copyright &copy; Melanie Parham</p>  
+      </footer>
+  </div>
   </body>
+  
 </html>
