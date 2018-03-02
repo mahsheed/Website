@@ -1,62 +1,155 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
-    <meta charset="utf-8">
-    <title>My test page</title>
-    <link href="styles/style.css" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/css?family=Mukta+Mahee" rel="stylesheet">
-    <title>(Type a title for your page here)</title>
-    <script type="text/javascript"> 
-    function show_now() { 
-    var my_time = new Date();
-    alert(my_time); 
-    }
-    </script>
+    <title> </title>
+    <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
   </head>
   <body>
-      <input type=button value="Show Time" onclick="show_now();">
+    <h1>Shopping Cart</h1>
 
-      
-      <h2>JavaScript Confirm Box</h2>
-      
-      //Ahmad's project: Make it so that when user presses ok, it shows the current date and time in second alert but when they hit cancel (false), shows no second alert box
-      <button onclick="myFunction()">Try it</button>
-      
-      <p id="demo"></p>
-      
-      <script>
-      function myFunction() {
-          var txt;
-          if (true) {
-            confirm("date")
-          }
-          if (confirm("Add to basket?")) {
-              txt = "Today's date is ";
-          } else (false) {
-              txt = "you suck!";
-          }
-          document.getElementById("demo").innerHTML = txt;
+    <div>
+      <ul>
+        <li><a class="add-to-cart" href="#" data-name="Apple" data-price="1.22">Apple $1.22</a></li>
+        <li><a class="add-to-cart" href="#" data-name="Banana" data-price="1.33">Banana $1.33</a></li>
+        <li><a class="add-to-cart" href="#" data-name="Shoe" data-price="22.33">Shoe $22.33</a></li>
+        <li><a class="add-to-cart" href="#" data-name="Frisbee" data-price="5.22">Frisbee $5.22</a></li>
+      </ul>
+      <button id="clear-cart">Clear Cart</button>
+    </div>
+
+
+    <div>
+      <ul id="show-cart">
+        <li>??????</li>
+      </ul>
+      <div>Total Cart:$<span id="total-cart"></span></div>
+    </div>
+
+    <script>
+
+      $(".add-to-cart").click(function(event){
+        event.preventDefault();
+        var name = $(this).attr("data-name");
+        var price = Number($(this).attr("data-price"));
+
+        addItemToCart(name, price, 1);
+        displayCart();
+      });
+
+      $("#clear-cart").click(function(event){
+        clearCart();
+        displayCart();
+      });
+
+      function displayCart() {
+        var cartArray= listCart ();
+        var output = "";
+
+        for (var i in cartArray) {
+          output += "<li>"+cartArray[i].name
+            +" "+cartArray[i].count
+            +" x "+cartArray[i].price
+            +" = "+cartArray[i].total+"</li>"; //+= means add to the end of what's alraedy there
+        }
+
+        $("#show-cart").html(output); //lets you write text into tag
+        $("total-cart").html( totalCart() );
       }
-      </script>
+
+      //*******************************
+      // Shopping Cart functions
+
+      var cart = [];
+
+      var Item = function(name, price, count) {
+          this.name = name
+          this.price = price
+          this.count = count
+      };
+
+      function addItemToCart(name, price, count) {
+        for (var i in cart) {
+          if (cart[i].name === name) {
+              cart[i].count += count;
+              saveCart();
+              return;
+          }
+        }
+        var item = new Item(name, price, count);
+        cart.push(item);
+        saveCart();
+      }
+
+      function removeItemFromCart(name) { //Removes one item}
+        for (var i in cart) {
+            if (cart[i].name === name) { //"3" === 3 false
+                cart[i].count --; //cart[i].count --
+                if (cart[i].count === 0) {
+                  cart.splice(i, 1);
+                }
+                break; 
+          }
+        }
+        saveCart();
+      }
       
-      </body>
-      </html>
+      function removeItemFromCartAll(name) {// removes all item name
+        for (var i in cart) {
+          if (cart[i].name === name) {
+              cart.splice(i, 1);
+              break;
+           }
+        }
+        saveCart();
+      }
+
+      function clearCart() {
+        cart = [];
+        saveCart();
+      }
+
+      function countCart() { // -> return total count
+        var totalCount = 0;
+        for (var i in cart) {
+          totalCount += cart[i].count;
+        }
+
+        return totalCount;
+      }
       
-    <h1>Mozilla is cool</h1>
-    <img src="images/firefox-icon.png" alt="The Firefox logo: a flaming fox surrounding the Earth." alt="Flaming fox surrounding earth" width="50px">
+      function totalCart() { // -> return total cost
+        var totalCost = 0;
+        for (var i in cart) {
+          totalCost += cart[i].price * cart[i].count;
+        }
+        return totalCost.toFixed(2);
+      }
 
-    <p>At Mozilla, we’re a global community of</p>
-   
-    
-    <ul> <!-- changed to list in the tutorial -->
-      <li>technologists</li>
-      <li>thinkers</li>
-      <li>builders</li>
-    </ul>
+      function listCart() { //-> array of Item
+        var cartCopy = [];
+        for (var i in cart) {
+          var item = cart[i];
+          var itemCopy = {};
+          for (var p in item) {
+            itemCopy[p] = item[p];
+          }
+          itemCopy.total= item.price * item.count;
+          cartCopy.push(itemCopy);
+        }
+        return cartCopy;
+      }
 
-    <p>working together to keep the Internet alive and accessible, so people worldwide can be informed contributors and creators of the Web. We believe this act of human collaboration across an open platform is essential to individual growth and our collective future.</p>
+      function saveCart() {
+        localStorage.setItem("shoppingCart", JSON.stringify(cart)); //jason turned it into string
+      } 
 
-    <p>Read <a href="https://www.facebook.com/mmparham/">Melanie's Facebook</a> to learn even more about the cool girl that built this website.</p>
-    <img src="images/clear.jpg" alt="Clear mascara" width="60px"></src>
+      function loadCart() {
+        cart = JSON.parse(localStorage.getItem("shoppingCart"));
+      }
+
+      loadCart();
+      displayCart(); //must display after you load the cart.
+
+    </script>
   </body>
 </html>
